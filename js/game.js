@@ -34,9 +34,9 @@ let UserScore = 0;
 let MaxScore = Brick.totalCol * Brick.totalRow;
 
 let scor = new Audio();
-scor.src = "score.mp3";
+scor.src = "sound/score.mp3";
 let soundtrack = new Audio();
-soundtrack.src = "Canon-In-D-Various-Artists.mp3";
+soundtrack.src = "sound/Canon-In-D-Various-Artists.mp3";
 
 let BrickList = [];
 
