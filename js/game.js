@@ -35,8 +35,6 @@ let MaxScore = Brick.totalCol * Brick.totalRow;
 
 let scor = new Audio();
 scor.src = "sound/score.mp3";
-let soundtrack = new Audio();
-soundtrack.src = "sound/Canon-In-D-Various-Artists.mp3";
 
 let BrickList = [];
 
@@ -171,7 +169,6 @@ function checkGameWin() {
 
 function draw() {
     if (!isGameOver) {
-        soundtrack.play();
         context.clearRect(0, 0, canvas.width, canvas.height);
         drawBall();
         drawPaddle();
