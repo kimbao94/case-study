@@ -9,6 +9,26 @@ let Ball = {
     radius: 10
 }
 
+function updateBall() {
+    Ball.x += Ball.dx;
+    Ball.y += Ball.dy;
+}
+function drawBall() {
+    context.beginPath();
+    context.arc(Ball.x, Ball.y, Ball.radius, 0, Math.PI * 2);
+    context.fillStyle = 'red';
+    context.fill();
+    context.closePath();
+}
+function hanleBall() {
+    if (Ball.x < Ball.radius || Ball.x > canvas.width - Ball.radius) {
+        Ball.dx = -Ball.dx;
+    }
+    if (Ball.y < Ball.radius || Ball.y > canvas.height - Ball.radius) {
+        Ball.dy = -Ball.dy;
+    }
+}
+
 let Paddle = {
     width: 100,
     height: 20,
@@ -18,38 +38,13 @@ let Paddle = {
     isMovingLeft: false,
     isMovingRight: false,
 }
-let Brick = {
-    offsetX: 50,
-    offsetY: 20,
-    margin: 30,
-    width: 70,
-    height: 15,
-    totalRow: 5,
-    totalCol: 7
-}
 
-let isGameOver = false;
-let isGameWin = false;
-let UserScore = 0;
-let MaxScore = Brick.totalCol * Brick.totalRow;
-
-let scor = new Audio();
-scor.src = "sound/score.mp3";
-
-let BrickList = [];
-
-for (let i = 0; i < Brick.totalRow; i++) {
-    for (let j = 0; j < Brick.totalCol; j++) {
-        BrickList.push({
-            x: Brick.offsetX + j * (Brick.width + Brick.margin),
-            y: Brick.offsetY + i * (Brick.height + Brick.margin),
-            isBroken: false
-        })
-    }
-}
-function updateBall() {
-    Ball.x += Ball.dx;
-    Ball.y += Ball.dy;
+function drawPaddle() {
+    context.beginPath();
+    context.rect(Paddle.x, Paddle.y, Paddle.width, Paddle.height);
+    context.fillStyle = 'red';
+    context.fill();
+    context.closePath();
 }
 
 function updatePalle() {
@@ -79,21 +74,22 @@ document.addEventListener('keydown', function (event) {
         Paddle.isMovingRight = true;
     }
 });
-
-function drawBall() {
-    context.beginPath();
-    context.arc(Ball.x, Ball.y, Ball.radius, 0, Math.PI * 2);
-    context.fillStyle = 'red';
-    context.fill();
-    context.closePath();
+function hanlePaddle() {
+    if (Ball.x + Ball.radius >= Paddle.x && Ball.x + Ball.radius <= Paddle.x + Paddle.width &&
+        Ball.y + Ball.radius >= canvas.height - Paddle.height) {
+        Ball.dy = -Ball.dy
+    }
 }
 
-function drawPaddle() {
-    context.beginPath();
-    context.rect(Paddle.x, Paddle.y, Paddle.width, Paddle.height);
-    context.fillStyle = 'red';
-    context.fill();
-    context.closePath();
+
+let Brick = {
+    offsetX: 50,
+    offsetY: 20,
+    margin: 30,
+    width: 70,
+    height: 15,
+    totalRow: 5,
+    totalCol: 7
 }
 
 function drawBricks() {
@@ -108,23 +104,23 @@ function drawBricks() {
     });
 }
 
-function hanleBall() {
-    if (Ball.x < Ball.radius || Ball.x > canvas.width - Ball.radius) {
-        Ball.dx = -Ball.dx;
-    }
-    if (Ball.y < Ball.radius || Ball.y > canvas.height - Ball.radius) {
-        Ball.dy = -Ball.dy;
-    }
-}
-
-function hanlePaddle() {
-    if (Ball.x + Ball.radius >= Paddle.x && Ball.x + Ball.radius <= Paddle.x + Paddle.width &&
-        Ball.y + Ball.radius >= canvas.height - Paddle.height) {
-        Ball.dy = -Ball.dy
+let BrickList = [];
+for (let i = 0; i < Brick.totalRow; i++) {
+    for (let j = 0; j < Brick.totalCol; j++) {
+        BrickList.push({
+            x: Brick.offsetX + j * (Brick.width + Brick.margin),
+            y: Brick.offsetY + i * (Brick.height + Brick.margin),
+            isBroken: false
+        })
     }
 }
+let UserScore = 0;
+let MaxScore = Brick.totalCol * Brick.totalRow;
 
-function hanleBrick() {//bóng chạm gạch
+let scor = new Audio();
+scor.src = "sound/score.mp3";
+
+function hanleBrick() {
     BrickList.forEach(function (b) {
         if (!b.isBroken) {
             if (Ball.x >= b.x && Ball.x <= b.x + Brick.width && Ball.y + Ball.radius >= b.y && Ball.y - Ball.radius <= b.y + Brick.height) {
@@ -143,6 +139,10 @@ function hanleBrick() {//bóng chạm gạch
 
 }
 
+let isGameOver = false;
+let isGameWin = false;
+
+
 function youWin() {
     context.font = "50px Arial";
     context.fillStyle = 'lightsalmon';
@@ -151,7 +151,7 @@ function youWin() {
 function youLose() {
     context.font = "100px Arial";
     context.fillStyle = 'lightsalmon';
-    context.fillText("You Lose",150,400);
+    context.fillText("Game Over",150,400);
 }
 
 function checkGameOver() {
